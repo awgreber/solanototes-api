@@ -73,9 +73,9 @@ class ChatMessage(BaseModel):
 
 @app.post("/cassie")
 def cassie_chat(req: ChatMessage):
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key:
-        return {"response": "API key not configured"}
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "NOT_FOUND")
+    if not api_key or api_key == "NOT_FOUND":
+        return {"response": f"Key missing. All env vars: {list(os.environ.keys())}"}
     client = anthropic.Anthropic(api_key=api_key)
 
     response = client.messages.create(
