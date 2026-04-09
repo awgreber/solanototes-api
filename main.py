@@ -73,10 +73,13 @@ class ChatMessage(BaseModel):
 
 @app.post("/cassie")
 def cassie_chat(req: ChatMessage):
-    client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        return {"response": "API key not configured"}
+    client = anthropic.Anthropic(api_key=api_key)
 
     response = client.messages.create(
-        model="claude-haiku-4-5",
+        model="claude-haiku-4-5-20251001",
         max_tokens=500,
         system="""You are Cassie, the friendly AI assistant for SolanoTotes — a reusable moving bin rental service in Solano County, CA.
 
